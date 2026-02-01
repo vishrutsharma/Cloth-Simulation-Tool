@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Vishrut/Programming/PersonalProjects/VerletIntegration/build",
+  "command": "C:\\Vishrut\\Paths\\mingw64\\bin\\c++.exe -IC:/Vishrut/Paths/SDL2/lib/cmake/SDL2/include -isystem C:/Vishrut/Paths/SDL2/include/SDL2 -std=gnu++17 -o CMakeFiles\\main.dir\\src\\Cloth.cpp.obj -c C:\\Vishrut\\Programming\\PersonalProjects\\VerletIntegration\\src\\Cloth.cpp",
+  "file": "C:\\Vishrut\\Programming\\PersonalProjects\\VerletIntegration\\src\\Cloth.cpp",
+  "output": "CMakeFiles\\main.dir\\src\\Cloth.cpp.obj"
+},
+{
+  "directory": "C:/Vishrut/Programming/PersonalProjects/VerletIntegration/build",
+  "command": "C:\\Vishrut\\Paths\\mingw64\\bin\\c++.exe -IC:/Vishrut/Paths/SDL2/lib/cmake/SDL2/include -isystem C:/Vishrut/Paths/SDL2/include/SDL2 -std=gnu++17 -o CMakeFiles\\main.dir\\src\\Main.cpp.obj -c C:\\Vishrut\\Programming\\PersonalProjects\\VerletIntegration\\src\\Main.cpp",
+  "file": "C:\\Vishrut\\Programming\\PersonalProjects\\VerletIntegration\\src\\Main.cpp",
+  "output": "CMakeFiles\\main.dir\\src\\Main.cpp.obj"
+},
+{
+  "directory": "C:/Vishrut/Programming/PersonalProjects/VerletIntegration/build",
+  "command": "C:\\Vishrut\\Paths\\mingw64\\bin\\c++.exe -IC:/Vishrut/Paths/SDL2/lib/cmake/SDL2/include -isystem C:/Vishrut/Paths/SDL2/include/SDL2 -std=gnu++17 -o CMakeFiles\\main.dir\\src\\Node.cpp.obj -c C:\\Vishrut\\Programming\\PersonalProjects\\VerletIntegration\\src\\Node.cpp",
+  "file": "C:\\Vishrut\\Programming\\PersonalProjects\\VerletIntegration\\src\\Node.cpp",
+  "output": "CMakeFiles\\main.dir\\src\\Node.cpp.obj"
+}
+]

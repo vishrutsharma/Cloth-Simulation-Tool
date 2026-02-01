@@ -1,0 +1,12 @@
+# ninja log v6
+536	616	7916477838488928	main.exe	9dd36fd934a51962
+56	535	7916477833663276	CMakeFiles/main.dir/src/Main.cpp.obj	b4dcf1d159e5f43a
+73	174	7916477296696938	CMakeFiles/main.dir/src/Node.cpp.obj	761984ff2cc9a21c
+49	303	7916477296465128	CMakeFiles/main.dir/src/Cloth.cpp.obj	4ada5bfb93fde4e
+108	315	7916479429769141	build.ninja	e94010caff189b91
+32	285	7916479429769141	build.ninja	e94010caff189b91
+19	217	7916479430405022	CMakeFiles/main.dir/src/Cloth.cpp.obj	4ada5bfb93fde4e
+22	532	7916479430426917	CMakeFiles/main.dir/src/Main.cpp.obj	b4dcf1d159e5f43a
+535	631	7916479435563374	main.exe	e0c6d765eaaad895
+52	601	7916479753580813	CMakeFiles/main.dir/src/Main.cpp.obj	b4dcf1d159e5f43a
+603	692	7916479759005400	main.exe	e0c6d765eaaad895
