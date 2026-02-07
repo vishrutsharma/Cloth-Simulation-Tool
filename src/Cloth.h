@@ -1,6 +1,6 @@
 #pragma once
 #include "Node.h"
-#include <SDL_render.h>
+#include <SDL.h>
 
 #include <vector>
 
@@ -12,6 +12,8 @@ class Cloth
 private:
     std::vector<Node> m_nodes;
     SDL_Renderer* m_renderer;
+    float m_SimulationTimeTick;
+
 public:
     Cloth(SDL_Renderer*);
     void AddNode(IVec2&&);

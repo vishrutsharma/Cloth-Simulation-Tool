@@ -2,20 +2,18 @@
 #include <stdio.h>
 #include <conio.h>
 #include "Cloth.h"
+#include "TimeManager.h"
 #include "Node.h"
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 800;
 
 
-int main(int argc,char* argv[])
-{
-    printf("In Here");
+int main(int argc,char* argv[]) {
     SDL_Window* window          = nullptr;
     SDL_Renderer* renderer      = nullptr;
 
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
-    {
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return -1;
     }
@@ -27,21 +25,18 @@ int main(int argc,char* argv[])
                               WINDOW_HEIGHT,
                               SDL_WINDOW_SHOWN);
 
-    if(window == nullptr)
-    {
+    if(window == nullptr) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return -1;
     }
     
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if(renderer == nullptr)
-    {
+    if(renderer == nullptr) {
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return -1;
     }
-    
-    Cloth* cloth = new Cloth(renderer);
 
+    Cloth* cloth = new Cloth(renderer);
     cloth->AddNode(IVec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2});
     cloth->AddNode(IVec2{WINDOW_WIDTH/2-40,WINDOW_HEIGHT/2});
     
@@ -50,15 +45,14 @@ int main(int argc,char* argv[])
     bool quit = false;
     SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
     SDL_RenderClear(renderer);
-    while (!quit) 
-    {
-        while (SDL_PollEvent(&e)) 
-        {
+    while (!quit) {
+        while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) quit = true;
     
         }
         SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
         SDL_RenderClear(renderer);
+        TimeManager::GetInstance().Tick();
         cloth->Update();
         cloth->Render();
         SDL_RenderPresent(renderer); 
