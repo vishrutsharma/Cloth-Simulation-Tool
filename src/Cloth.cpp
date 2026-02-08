@@ -1,33 +1,37 @@
 #include "Cloth.h"
-#include "TimeManager.h"
 
-Cloth::Cloth(SDL_Renderer* renderer) : m_renderer(renderer) {}
+Cloth::Cloth() {
+    m_SimulationTimeTick = 0;
+}
 
-void Cloth::AddNode(IVec2&& desiredPos) {
-    IVec2 pos {desiredPos.x,desiredPos.y};
+void Cloth::AddNode(Vec2&& desiredPos) {
+    Vec2 pos {desiredPos.x,desiredPos.y};
     SDL_Color color {255,255,255,255};
     Node node{pos,color};
     m_nodes.push_back(node);
 }
 
-void Cloth::Update() {
-    if(m_nodes.size() >0)
+void Cloth::Update(float dt) {
+    if(m_nodes.size() <=0)
         return;
     
-    if(m_SimulationTimeTick <= 10)
-    {
-        // currently the mass is same for all nodes
-        // later it will vary based on user input
-        IVec2 acceleration {FORCE / m_nodes[0].GetMass()};
-
-        float deltaTime = TimeManager::GetInstance().GetDeltaTime();
+    // currently the mass is same for all nodes
+    // later it will vary based on user input
+    Vec2 force {0,FORCE};
+    if(m_SimulationTimeTick <= 100) {
+        m_SimulationTimeTick += dt;
         for(Node& node : m_nodes){
-            node.m_velocity += acceleration * deltaTime;
-            node.m_currentPos += node.m_velocity * deltaTime;
-            m_SimulationTimeTick += deltaTime;
+            Vec2 acceleration = Vec2{force.x/node.GetMass(),force.y/node.GetMass()};
+            const Vec2 prevPos = node.m_currentPos;    
+            node.m_currentPos.x = 2 * node.m_currentPos.x - node.m_prevPos.x + acceleration.x * (dt * dt);
+            node.m_currentPos.y = 2 * node.m_currentPos.y - node.m_prevPos.y + acceleration.y * (dt * dt);
+            node.m_prevPos.x = prevPos.x;
+            node.m_prevPos.y = prevPos.y;
             node.Update();
         }
-        SDL_Delay(2000);
+    }
+    else{
+        m_SimulationTimeTick = 0;
     }
 }
 

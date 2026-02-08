@@ -4,6 +4,7 @@
 #include "Cloth.h"
 #include "TimeManager.h"
 #include "Node.h"
+#include "ClothBuilder.h"
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 800;
@@ -36,9 +37,11 @@ int main(int argc,char* argv[]) {
         return -1;
     }
 
-    Cloth* cloth = new Cloth(renderer);
-    cloth->AddNode(IVec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2});
-    cloth->AddNode(IVec2{WINDOW_WIDTH/2-40,WINDOW_HEIGHT/2});
+    Cloth* cloth = new ;
+    // cloth->AddNode(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2});
+    // cloth->AddNode(Vec2{WINDOW_WIDTH/2-40,WINDOW_HEIGHT/2});
+    // cloth->AddNode(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2-50});
+    // cloth->AddNode(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2+50});
     
     
     SDL_Event e;
@@ -53,7 +56,7 @@ int main(int argc,char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
         SDL_RenderClear(renderer);
         TimeManager::GetInstance().Tick();
-        cloth->Update();
+        cloth->Update(TimeManager::GetInstance().GetDeltaTime());
         cloth->Render();
         SDL_RenderPresent(renderer); 
     }

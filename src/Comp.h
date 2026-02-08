@@ -1,15 +1,15 @@
 #pragma once
 #include <type_traits>
 
-struct IVec2 {
+struct Vec2 {
     float x;
     float y;
 
-    IVec2 operator + (const IVec2& vec) const {
+    Vec2 operator + (const Vec2& vec) const {
         return  { x + vec.x , y + vec.y };
     }
 
-    IVec2& operator += (const IVec2& vec)  {
+    Vec2& operator += (const Vec2& vec)  {
         x += vec.x;
         y += vec.y;
         return *this;
@@ -21,7 +21,7 @@ struct IVec2 {
             std::is_same_v<T, int> || std::is_same_v<T, float>
         >
     >
-    IVec2 operator * (T scalar) const {
+    Vec2 operator * (T scalar) const {
         return { x * scalar , y * scalar };
     } 
 
