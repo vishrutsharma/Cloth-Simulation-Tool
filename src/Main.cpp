@@ -37,12 +37,13 @@ int main(int argc,char* argv[]) {
         return -1;
     }
 
-    Cloth* cloth = new ;
-    // cloth->AddNode(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2});
-    // cloth->AddNode(Vec2{WINDOW_WIDTH/2-40,WINDOW_HEIGHT/2});
-    // cloth->AddNode(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2-50});
-    // cloth->AddNode(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2+50});
-    
+    Cloth* cloth = BasicClothBuilder()
+                    .SetRenderer(renderer)
+                    .SetSize(400,400)
+                    .SetResolution(50,50)
+                    .SetPosition(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2})
+                    .Build();
+
     
     SDL_Event e;
     bool quit = false;

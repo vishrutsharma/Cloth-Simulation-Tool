@@ -1,17 +1,18 @@
 #pragma once
 #include "Cloth.h"
 #include <SDL.h>
+#include <memory>
 
 class ClothBuilder
 {
     public:
     ~ClothBuilder() = default;
     virtual ClothBuilder& SetRenderer(SDL_Renderer*) = 0;
-    virtual ClothBuilder& SetPostition(Vec2) = 0;
+    virtual ClothBuilder& SetPosition(Vec2) = 0;
     virtual ClothBuilder& SetSize(int,int) = 0;
-    virtual ClothBuilder& SetResolution(int,int) = 0;
-    virtual ClothBuilder& SetNodeSize(int) = 0;
-    virtual Cloth* Build();
+    virtual ClothBuilder& SetNodeSize(int size) = 0;
+    virtual ClothBuilder& SetGap(int gap) = 0;
+    virtual Cloth* Build() = 0;
 };
 
 class BasicClothBuilder : public ClothBuilder
@@ -19,9 +20,12 @@ class BasicClothBuilder : public ClothBuilder
     private:
         Cloth* cloth;
 
-  public:
+    public:
         BasicClothBuilder() : cloth(new Cloth()) {}
-        ~BasicClothBuilder();
+        ~BasicClothBuilder()
+        {
+            delete cloth;
+        }
         
         ClothBuilder& SetRenderer(SDL_Renderer* renderer) override{
             cloth->SetRenderer(renderer);
@@ -38,20 +42,20 @@ class BasicClothBuilder : public ClothBuilder
             return *this;
         }
 
-        ClothBuilder& SetResolution(int resX,int resY) override {
-            cloth->SetResolution(resX,resY);
-            return *this;
-        }
-
         ClothBuilder& SetNodeSize(int size) override {
             cloth->SetNodeSize(size);
             return *this;
         }
 
+        ClothBuilder& SetGap(int gap) override {
+            cloth->SetGap(gap);
+            return *this;
+        }
+
         Cloth* Build() override {
+            cloth->Build();
             Cloth* t_cloth = cloth;
             cloth = nullptr;
             return t_cloth;
         }
-
-}
+};

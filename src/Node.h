@@ -12,9 +12,10 @@ private:
     float m_mass;
     SDL_Rect m_rect;
     SDL_Color m_color;
+    int m_size;
 
 public:
-    Node(Vec2&,SDL_Color&);
+    Node(Vec2&,SDL_Color&,int size);
     inline const SDL_Color& GetColor() {return m_color;}
     inline const SDL_Rect& GetRect() {return m_rect;}
     inline const float GetMass() {return m_mass;}

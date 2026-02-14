@@ -1,17 +1,39 @@
 #include "Cloth.h"
+#include <cmath>
 
-Cloth::Cloth() {
+Cloth :: Cloth() {
     m_SimulationTimeTick = 0;
 }
 
-void Cloth::AddNode(Vec2&& desiredPos) {
+void Cloth :: Build(){
+    m_clothRect.w = m_clothWidth;
+    m_clothRect.h = m_clothHeight;
+    m_clothRect.x = static_cast<int>(m_position.x) - m_clothWidth/2;
+    m_clothRect.y = static_cast<int>(m_position.y) - m_clothHeight/2;
+    int resX = floor((m_clothWidth + m_nodesGap)/(m_nodeSize + m_nodesGap));
+    int resY = floor((m_clothHeight + m_nodesGap)/(m_nodeSize + m_nodesGap));
+
+    int stepX = m_nodeSize + m_nodesGap;
+
+    for(int y = 0; y < resY; y++)
+    {
+        for(int x = 0; x < resX; x++)
+        {
+            // float xPos = 
+        }
+    }
+    
+    
+}
+
+void Cloth :: AddNode(Vec2&& desiredPos) {
     Vec2 pos {desiredPos.x,desiredPos.y};
     SDL_Color color {255,255,255,255};
-    Node node{pos,color};
+    Node node{pos,color,m};
     m_nodes.push_back(node);
 }
 
-void Cloth::Update(float dt) {
+void Cloth :: Update(float dt) {
     if(m_nodes.size() <=0)
         return;
     
@@ -35,9 +57,12 @@ void Cloth::Update(float dt) {
     }
 }
 
-void Cloth::Render() {
+void Cloth :: Render() {
     if(!m_renderer)
         return;
+
+    SDL_SetRenderDrawColor(m_renderer,245,122,24,255);
+    SDL_RenderDrawRect(m_renderer,&m_clothRect);
 
     if(m_nodes.size() <=0)
         return;
