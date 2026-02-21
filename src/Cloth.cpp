@@ -1,5 +1,6 @@
 #include "Cloth.h"
 #include <cmath>
+#include "Utils.h"
 
 Cloth :: Cloth() {
     m_SimulationTimeTick = 0;
@@ -12,26 +13,27 @@ void Cloth :: Build(){
     m_clothRect.y = static_cast<int>(m_position.y) - m_clothHeight/2;
     int resX = floor((m_clothWidth + m_nodesGap)/(m_nodeSize + m_nodesGap));
     int resY = floor((m_clothHeight + m_nodesGap)/(m_nodeSize + m_nodesGap));
-
-    int stepX = m_nodeSize + m_nodesGap;
+    m_nodes.clear();
+    m_nodes.reserve(resX * resY);
+    
+    int stepSize = m_nodeSize + m_nodesGap;
+    int startX =  static_cast<int>(m_clothRect.x + m_nodeSize * 0.5f);
+    int startY =  static_cast<int>(m_clothRect.y + m_nodeSize * 0.5f);
 
     for(int y = 0; y < resY; y++)
     {
         for(int x = 0; x < resX; x++)
         {
-            // float xPos = 
+            float yPos =  startY + y * stepSize;
+            float xPos =  startX + x * stepSize;
+            Vec2 pos {xPos,yPos};
+            SDL_Color color {Utils::Random::GetRandomColorHSV()};
+            Node node{pos,color,m_nodeSize};
+            m_nodes.push_back(node);
         }
-    }
-    
-    
+    }    
 }
 
-void Cloth :: AddNode(Vec2&& desiredPos) {
-    Vec2 pos {desiredPos.x,desiredPos.y};
-    SDL_Color color {255,255,255,255};
-    Node node{pos,color,m};
-    m_nodes.push_back(node);
-}
 
 void Cloth :: Update(float dt) {
     if(m_nodes.size() <=0)

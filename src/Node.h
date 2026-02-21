@@ -2,6 +2,7 @@
 #include "Comp.h"
 #include <SDL_rect.h>
 
+
 #define MASS 1
 #define NODE_WIDTH 20
 #define NODE_HEIGHT 20

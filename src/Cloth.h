@@ -21,7 +21,7 @@ private:
     SDL_Rect m_clothRect;
   
 private:
-    void AddNode(Vec2&&);
+    //void AddNode(Vec2&&);
     
 public:
     Cloth();
