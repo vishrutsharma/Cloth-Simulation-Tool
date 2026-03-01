@@ -20,6 +20,7 @@ void Cloth :: Build(){
     int startX =  static_cast<int>(m_clothRect.x + m_nodeSize * 0.5f);
     int startY =  static_cast<int>(m_clothRect.y + m_nodeSize * 0.5f);
 
+    // Nodes Creation
     for(int y = 0; y < resY; y++)
     {
         for(int x = 0; x < resX; x++)
@@ -31,32 +32,66 @@ void Cloth :: Build(){
             Node node{pos,color,m_nodeSize};
             m_nodes.push_back(node);
         }
-    }    
+    } 
+    
+    int hrThreadsCount = (resX - 1) * resY;
+    int vrThreadsCount = (resY - 1) * resX;
+    
+    for(int i = 0 ; i < m_nodes.size(); i++)
+    {
+        Node node = m_nodes[i];
+        int nodeHScan = i % resX;
+        int nodeVScan = i / resY;
+        SDL_Log("For i : %d we have HScan as:%d and VScan as :%d",i,nodeHScan,nodeVScan);
+        
+        if(nodeHScan != resX - 1)
+        {
+            m_threads.push_back(Thread(node,m_nodes[i+1],Utils::Math::GetDistance(node.m_currentPos,m_nodes[i+1].m_currentPos)));
+        }
+
+        if(nodeVScan  != resY -1)
+        {
+            m_threads.push_back(Thread(node,m_nodes[i + resX],Utils::Math::GetDistance(node.m_currentPos,m_nodes[ i + resX].m_currentPos)));
+        }
+    }
 }
 
 
-void Cloth :: Update(float dt) {
-    if(m_nodes.size() <=0)
+void Cloth::Update(float dt)
+{
+    if (m_nodes.empty())
         return;
-    
-    // currently the mass is same for all nodes
-    // later it will vary based on user input
-    Vec2 force {0,FORCE};
-    if(m_SimulationTimeTick <= 100) {
-        m_SimulationTimeTick += dt;
-        for(Node& node : m_nodes){
-            Vec2 acceleration = Vec2{force.x/node.GetMass(),force.y/node.GetMass()};
-            const Vec2 prevPos = node.m_currentPos;    
-            node.m_currentPos.x = 2 * node.m_currentPos.x - node.m_prevPos.x + acceleration.x * (dt * dt);
-            node.m_currentPos.y = 2 * node.m_currentPos.y - node.m_prevPos.y + acceleration.y * (dt * dt);
-            node.m_prevPos.x = prevPos.x;
-            node.m_prevPos.y = prevPos.y;
-            node.Update();
+
+    Vec2 force{0.0f, FORCE};
+
+    for (Node& node : m_nodes)
+    {
+        Vec2 acceleration{
+            force.x / node.GetMass(),
+            force.y / node.GetMass()
+        };
+
+        if(node.m_currentPos.y >= 800)
+        {
+            node.m_currentPos.y = 800;
+            continue;
         }
+        const Vec2 prevPos = node.m_currentPos;
+
+        node.m_currentPos.x =
+            2.0f * node.m_currentPos.x -
+            node.m_prevPos.x +
+            acceleration.x * dt * dt;
+
+        node.m_currentPos.y =
+            2.0f * node.m_currentPos.y -
+            node.m_prevPos.y +
+            acceleration.y * dt * dt;
+
+        node.m_prevPos = prevPos;
+        node.Update(dt);
     }
-    else{
-        m_SimulationTimeTick = 0;
-    }
+
 }
 
 void Cloth :: Render() {
@@ -66,12 +101,12 @@ void Cloth :: Render() {
     SDL_SetRenderDrawColor(m_renderer,245,122,24,255);
     SDL_RenderDrawRect(m_renderer,&m_clothRect);
 
-    if(m_nodes.size() <=0)
-        return;
-
     for(Node& n : m_nodes) {
-        const SDL_Color color = n.GetColor();
-        SDL_SetRenderDrawColor(m_renderer,color.r,color.g,color.b,color.a);
-        SDL_RenderFillRect(m_renderer,&n.GetRect());
+        n.Render(m_renderer);
+    }
+
+    for(Thread& t : m_threads)
+    {
+       t.Render(m_renderer);
     }
 }

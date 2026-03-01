@@ -39,8 +39,8 @@ int main(int argc,char* argv[]) {
 
     Cloth* cloth = BasicClothBuilder()
                     .SetRenderer(renderer)
-                    .SetSize(500,80)
-                    .SetNodeSize(10)
+                    .SetSize(200,200)
+                    .SetNodeSize(20)
                     .SetGap(10)
                     .SetPosition(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2})
                     .Build();
@@ -58,7 +58,7 @@ int main(int argc,char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
         SDL_RenderClear(renderer);
         TimeManager::GetInstance().Tick();
-        //cloth->Update(TimeManager::GetInstance().GetDeltaTime());
+        cloth->Update(TimeManager::GetInstance().GetDeltaTime());
         cloth->Render();
         SDL_RenderPresent(renderer); 
     }

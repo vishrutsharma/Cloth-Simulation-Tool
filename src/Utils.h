@@ -2,12 +2,36 @@
 #pragma once
 
 #include <random>
+#include <math.h>
 #include <cstdlib>
 #include <ctime>
 #include <SDL.h>
 
 namespace Utils
 {
+    namespace Math
+    {
+
+        float GetLength(const Vec2& vec)
+        {
+            return sqrtf(vec.x * vec.x + vec.y * vec.y);
+        }
+
+        Vec2 GetDifference(const Vec2& vecA,const Vec2& vecB)
+        {
+            float xDiff = vecB.x - vecA.x;
+            float yDiff = vecB.y - vecA.y;
+            return Vec2{xDiff,yDiff};
+        }
+
+        float GetDistance(const Vec2& pos1,const Vec2& pos2)
+        {
+            float dx = pos2.x - pos1.x;
+            float dy = pos2.y - pos2.x;
+            return sqrtf(dx*dx + dy*dy);     
+        }
+    }
+
     namespace Random
     {
         inline void Seed()

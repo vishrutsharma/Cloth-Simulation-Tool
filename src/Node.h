@@ -1,6 +1,7 @@
 #pragma once
 #include "Comp.h"
 #include <SDL_rect.h>
+#include <SDL_render.h>
 
 
 #define MASS 1
@@ -20,7 +21,8 @@ public:
     inline const SDL_Color& GetColor() {return m_color;}
     inline const SDL_Rect& GetRect() {return m_rect;}
     inline const float GetMass() {return m_mass;}
-    void Update();
+    void Render(SDL_Renderer*);
+    void Update(float dt);
     void SetPos(Vec2& pos);
     Vec2 m_currentPos;
     Vec2 m_prevPos;

@@ -12,6 +12,7 @@ public:
     const double GetFPS() { return fps;}
     const float GetDeltaTime() { return deltaTime;}
     const float GetTotalTime() {return totalTime;}
+    
 
     void Tick() {
         Uint64 currentTick = SDL_GetPerformanceCounter();
@@ -29,7 +30,6 @@ public:
             frameCount = 0;
             fpsTimer = 0;
         }
-
     }
 
 private:
