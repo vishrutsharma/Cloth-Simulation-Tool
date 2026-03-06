@@ -1,6 +1,6 @@
 #include "Thread.h"
 
-Thread::Thread(const Node& nodeA,const Node& nodeB,int length) :
+Thread::Thread(Node& nodeA,Node& nodeB,int length) :
                                     m_nodeA(nodeA) , m_nodeB(nodeB), m_length(length) {} 
 
 void Thread::Render(SDL_Renderer* renderer)

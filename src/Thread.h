@@ -5,12 +5,12 @@ class Node;
 class Thread
 {
 public:
-    Thread(const Node&,const Node&,int);
+    Thread(Node&,Node&,int);
     void Render(SDL_Renderer*);
     void Update(float dt);
     
 private :
-    Node m_nodeA;
-    Node m_nodeB;
+    Node& m_nodeA;
+    Node& m_nodeB;
     int m_length;
 };

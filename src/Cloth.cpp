@@ -39,19 +39,20 @@ void Cloth :: Build(){
     
     for(int i = 0 ; i < m_nodes.size(); i++)
     {
-        Node node = m_nodes[i];
+        Node& node = m_nodes[i];
         int nodeHScan = i % resX;
-        int nodeVScan = i / resY;
-        SDL_Log("For i : %d we have HScan as:%d and VScan as :%d",i,nodeHScan,nodeVScan);
+        int nodeVScan = i / resX;
         
         if(nodeHScan != resX - 1)
         {
-            m_threads.push_back(Thread(node,m_nodes[i+1],Utils::Math::GetDistance(node.m_currentPos,m_nodes[i+1].m_currentPos)));
+            Node& nxtNode = m_nodes[i+1];
+            m_threads.emplace_back(Thread(node,nxtNode,Utils::Math::GetDistance(node.m_currentPos,nxtNode.m_currentPos)));
         }
 
         if(nodeVScan  != resY -1)
         {
-            m_threads.push_back(Thread(node,m_nodes[i + resX],Utils::Math::GetDistance(node.m_currentPos,m_nodes[ i + resX].m_currentPos)));
+            Node& nxtNode = m_nodes[i+resX];
+            m_threads.emplace_back(Thread(node,nxtNode,Utils::Math::GetDistance(node.m_currentPos,nxtNode.m_currentPos)));
         }
     }
 }
@@ -63,14 +64,12 @@ void Cloth::Update(float dt)
         return;
 
     Vec2 force{0.0f, FORCE};
-
+    Vec2 acceleration{
+            force.x / m_nodes[0].GetMass(),
+            force.y / m_nodes[0].GetMass()
+        };
     for (Node& node : m_nodes)
     {
-        Vec2 acceleration{
-            force.x / node.GetMass(),
-            force.y / node.GetMass()
-        };
-
         if(node.m_currentPos.y >= 800)
         {
             node.m_currentPos.y = 800;
@@ -101,6 +100,7 @@ void Cloth :: Render() {
     SDL_SetRenderDrawColor(m_renderer,245,122,24,255);
     SDL_RenderDrawRect(m_renderer,&m_clothRect);
 
+    
     for(Node& n : m_nodes) {
         n.Render(m_renderer);
     }
