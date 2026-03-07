@@ -24,7 +24,10 @@ private:
   
 private:
     //void AddNode(Vec2&&);
-    
+    void KeepInRange(Node&);
+    void AddThread(int,int);
+    void AddConstaint();
+
 public:
     Cloth();
     inline void SetRenderer(SDL_Renderer* renderer) {m_renderer = renderer;}
@@ -32,6 +35,7 @@ public:
     inline void SetSize(int width,int height) { m_clothWidth = width; m_clothHeight = height;}
     inline void SetNodeSize(int nodeSize) {m_nodeSize = nodeSize;}
     inline void SetGap(int gap) {m_nodesGap = gap;}
+    
     void Build();
     void Update(float);
     void Render();

@@ -5,12 +5,12 @@ class Node;
 class Thread
 {
 public:
-    Thread(Node&,Node&,int);
-    void Render(SDL_Renderer*);
-    void Update(float dt);
+    Thread(int,int,float);
+    void Update(SDL_Renderer*,Vec2&,Vec2&);
+    inline float GetLength() {return m_length;}
     
 private :
-    Node& m_nodeA;
-    Node& m_nodeB;
-    int m_length;
+    int m_nodeAIndex;
+    int m_nodeBIndex;
+    float m_length;
 };

@@ -43,20 +43,32 @@ void Cloth :: Build(){
         int nodeHScan = i % resX;
         int nodeVScan = i / resX;
         
+        //HORIZONTAL
         if(nodeHScan != resX - 1)
-        {
-            Node& nxtNode = m_nodes[i+1];
-            m_threads.emplace_back(Thread(node,nxtNode,Utils::Math::GetDistance(node.m_currentPos,nxtNode.m_currentPos)));
-        }
-
+            AddThread(node,m_nodes[i+1]);
+        
+        //VERTICAL
         if(nodeVScan  != resY -1)
-        {
-            Node& nxtNode = m_nodes[i+resX];
-            m_threads.emplace_back(Thread(node,nxtNode,Utils::Math::GetDistance(node.m_currentPos,nxtNode.m_currentPos)));
-        }
+            AddThread(node,m_nodes[i+resX]);
+        
+         //RIGHT DIAGONAL   
+        if(nodeHScan != resX - 1 && nodeVScan != resY-1)
+            AddThread(node,m_nodes[i+resX+1]);
+    
+        //LEFT DIAGONAL
+        if(nodeHScan != 0 && nodeVScan != resY-1)
+            AddThread(node,m_nodes[i+resX-1]);
     }
 }
 
+void Cloth::KeepInRange(Node& node)
+{
+    if(node.m_currentPos.y >= 800)  
+           node.m_currentPos.y = 800;
+
+    // Define region bounds constraints
+        
+}
 
 void Cloth::Update(float dt)
 {
@@ -64,42 +76,27 @@ void Cloth::Update(float dt)
         return;
 
     Vec2 force{0.0f, FORCE};
-    Vec2 acceleration{
-            force.x / m_nodes[0].GetMass(),
-            force.y / m_nodes[0].GetMass()
-        };
+    Vec2 acceleration { force.x / m_nodes[0].GetMass(), force.y / m_nodes[0].GetMass()};
     for (Node& node : m_nodes)
     {
-        if(node.m_currentPos.y >= 800)
-        {
-            node.m_currentPos.y = 800;
-            continue;
-        }
         const Vec2 prevPos = node.m_currentPos;
-
-        node.m_currentPos.x =
-            2.0f * node.m_currentPos.x -
-            node.m_prevPos.x +
-            acceleration.x * dt * dt;
-
-        node.m_currentPos.y =
-            2.0f * node.m_currentPos.y -
-            node.m_prevPos.y +
-            acceleration.y * dt * dt;
-
+        node.m_currentPos.x = 2.0f * node.m_currentPos.x - node.m_prevPos.x + acceleration.x * dt * dt;
+        node.m_currentPos.y = 2.0f * node.m_currentPos.y - node.m_prevPos.y + acceleration.y * dt * dt;
         node.m_prevPos = prevPos;
+
+        KeepInRange(node);
         node.Update(dt);
     }
-
+    AddConstaint();
 }
 
-void Cloth :: Render() {
+void Cloth :: Render() 
+{
     if(!m_renderer)
         return;
 
     SDL_SetRenderDrawColor(m_renderer,245,122,24,255);
     SDL_RenderDrawRect(m_renderer,&m_clothRect);
-
     
     for(Node& n : m_nodes) {
         n.Render(m_renderer);
@@ -109,4 +106,15 @@ void Cloth :: Render() {
     {
        t.Render(m_renderer);
     }
+}
+
+void Cloth::AddConstaint()
+{   
+
+
+}
+
+void Cloth::AddThread(Node& nodeA ,Node& nodeB)
+{
+    m_threads.emplace_back(nodeA,nodeB,Utils::Math::GetDistance(nodeA.m_currentPos,nodeB.m_currentPos));   
 }
