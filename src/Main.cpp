@@ -8,6 +8,7 @@
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 800;
+constexpr float FIXED_DT = 1.0f / 60.0f;
 
 
 int main(int argc,char* argv[]) {
@@ -50,15 +51,25 @@ int main(int argc,char* argv[]) {
     bool quit = false;
     SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
     SDL_RenderClear(renderer);
+    float accumulator = 0.0f;
     while (!quit) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) quit = true;
     
         }
+        
+        TimeManager::GetInstance().Tick();
+        float dt = TimeManager::GetInstance().GetDeltaTime();
+        accumulator += dt;
+
+        while(accumulator > FIXED_DT)
+        {
+            cloth->Update(FIXED_DT);
+            accumulator -= dt;
+        }
+        
         SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
         SDL_RenderClear(renderer);
-        TimeManager::GetInstance().Tick();
-        cloth->Update(TimeManager::GetInstance().GetDeltaTime());
         cloth->Render();
         SDL_RenderPresent(renderer); 
     }

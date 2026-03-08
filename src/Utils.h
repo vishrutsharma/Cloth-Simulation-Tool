@@ -27,7 +27,7 @@ namespace Utils
         float GetDistance(const Vec2& pos1,const Vec2& pos2)
         {
             float dx = pos2.x - pos1.x;
-            float dy = pos2.y - pos2.x;
+            float dy = pos2.y - pos1.y;
             return sqrtf(dx*dx + dy*dy);     
         }
     }

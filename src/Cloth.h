@@ -6,7 +6,7 @@
 #include <vector>
 
 #define NODE_SIZE 1
-#define FORCE 50
+#define FORCE 0.2
 
 class Cloth
 {
