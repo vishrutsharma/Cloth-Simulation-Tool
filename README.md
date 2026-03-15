@@ -1,4 +1,4 @@
-# Verlet Integration Cloth Simulation (C++ / SDL2)
+# Verlet Integration Cloth Simulation Tool
 
 A real-time **cloth simulation tool** built using **Verlet Integration** in C++ with **SDL2 rendering**.
 This project explores physics-based simulation of cloth using a network of nodes and constraints.
