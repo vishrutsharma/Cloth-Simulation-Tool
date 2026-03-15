@@ -5,36 +5,45 @@
 
 #include <vector>
 
-#define NODE_SIZE 1
-#define FORCE 0.2
+constexpr float NODE_SIZE = 1.0f; 
+constexpr float FORCE = 1.0f;
 
 class Cloth
 {
+    struct ClothPhysicsAttribs
+    {
+        FVec2 m_gravity;
+        float m_drag;
+        float m_elasticity;
+    };
+
 private:
     std::vector<Node> m_nodes;
     std::vector<Thread> m_threads;
     SDL_Renderer* m_renderer;
+    ClothPhysicsAttribs m_physicsParam;
     float m_SimulationTimeTick;
-    Vec2 m_position;
+    FVec2 m_position;
     int m_clothWidth;
     int m_clothHeight;
     int m_nodeSize;
     int m_nodesGap;
     SDL_Rect m_clothRect;
-  
+    
 private:
     //void AddNode(Vec2&&);
     void KeepInRange(Node&);
     void AddThread(int,int);
-    void AddConstaint();
+    void AddConstraint();
 
 public:
     Cloth();
     inline void SetRenderer(SDL_Renderer* renderer) {m_renderer = renderer;}
-    inline void SetPosition(Vec2 pos) {m_position = pos;}
+    inline void SetPosition(FVec2 pos) {m_position = pos;}
     inline void SetSize(int width,int height) { m_clothWidth = width; m_clothHeight = height;}
     inline void SetNodeSize(int nodeSize) {m_nodeSize = nodeSize;}
     inline void SetGap(int gap) {m_nodesGap = gap;}
+    inline void SetPhysicsAttribs(FVec2 gravity, float drag,float elasticity) { m_physicsParam ={gravity,drag,elasticity};}
     
     void Build();
     void Update(float);

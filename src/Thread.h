@@ -6,7 +6,7 @@ class Thread
 {
 public:
     Thread(int,int,float);
-    void Render(SDL_Renderer*,Vec2&,Vec2&);
+    void Render(SDL_Renderer*,FVec2&,FVec2&);
     inline float GetLength() {return m_length;}
     inline int GetIndexA() {return m_nodeAIndex;}
     inline int GetIndexB() {return m_nodeBIndex;}

@@ -12,19 +12,19 @@ namespace Utils
     namespace Math
     {
 
-        float GetLength(const Vec2& vec)
+        float GetLength(const FVec2& vec)
         {
             return sqrtf(vec.x * vec.x + vec.y * vec.y);
         }
 
-        Vec2 GetDifference(const Vec2& vecA,const Vec2& vecB)
+        FVec2 GetDifference(const FVec2& vecA,const FVec2& vecB)
         {
             float xDiff = vecB.x - vecA.x;
             float yDiff = vecB.y - vecA.y;
-            return Vec2{xDiff,yDiff};
+            return FVec2{xDiff,yDiff};
         }
 
-        float GetDistance(const Vec2& pos1,const Vec2& pos2)
+        float GetDistance(const FVec2& pos1,const FVec2& pos2)
         {
             float dx = pos2.x - pos1.x;
             float dy = pos2.y - pos1.y;

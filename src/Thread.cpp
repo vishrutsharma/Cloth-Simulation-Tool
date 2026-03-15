@@ -7,7 +7,7 @@ Thread::Thread(int nodeAIndex,int nodeBIndex,float length) :
 }
 
 
-void Thread::Render(SDL_Renderer* renderer,Vec2& nodeAPos,Vec2& nodeBPos)
+void Thread::Render(SDL_Renderer* renderer,FVec2& nodeAPos,FVec2& nodeBPos)
 {
     SDL_SetRenderDrawColor(renderer,255,255,255,255);
     

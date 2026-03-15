@@ -1,10 +1,12 @@
 #include <SDL.h>
 #include <stdio.h>
 #include <conio.h>
+#include <iostream>
 #include "Cloth.h"
 #include "TimeManager.h"
 #include "Node.h"
 #include "ClothBuilder.h"
+#include "Input.h"
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 800;
@@ -31,43 +33,47 @@ int main(int argc,char* argv[]) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return -1;
     }
-    
+
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if(renderer == nullptr) {
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return -1;
     }
 
+    Input input;
     Cloth* cloth = BasicClothBuilder()
                     .SetRenderer(renderer)
-                    .SetSize(200,200)
-                    .SetNodeSize(20)
+                    .SetSize(400,500)
+                    .SetNodeSize(5)
                     .SetGap(10)
-                    .SetPosition(Vec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2})
+                    .SetPosition(FVec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2})
+                    .SetPhysicsAttribs(Vec2{0.0f,981.0f},0.01f,10.0f)
                     .Build();
 
-    
     SDL_Event e;
     bool quit = false;
     SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
     SDL_RenderClear(renderer);
     float accumulator = 0.0f;
-    while (!quit) {
-        while (SDL_PollEvent(&e)) {
+    while (!quit) 
+    {
+        while (SDL_PollEvent(&e)) 
+        {
             if (e.type == SDL_QUIT) quit = true;
-    
+            input.HandleEvent(e);
         }
-        
+
         TimeManager::GetInstance().Tick();
         float dt = TimeManager::GetInstance().GetDeltaTime();
         accumulator += dt;
-
+        
         while(accumulator > FIXED_DT)
         {
             cloth->Update(FIXED_DT);
             accumulator -= dt;
         }
         
+      
         SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
         SDL_RenderClear(renderer);
         cloth->Render();

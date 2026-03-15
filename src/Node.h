@@ -17,14 +17,15 @@ private:
     int m_size;
 
 public:
-    Node(Vec2&,SDL_Color&,int size);
+    Node(FVec2&,SDL_Color&,int size,bool);
     inline const SDL_Color& GetColor() {return m_color;}
     inline const SDL_Rect& GetRect() {return m_rect;}
     inline const float GetMass() {return m_mass;}
     void Render(SDL_Renderer*);
     void Update(float dt);
-    void SetPos(Vec2& pos);
-    Vec2 m_currentPos;
-    Vec2 m_prevPos;
-    Vec2 m_velocity;
+    void SetPos(FVec2& pos);
+    FVec2 m_currentPos;
+    FVec2 m_prevPos;
+    FVec2 m_velocity;
+    bool m_isPinned;
 };
