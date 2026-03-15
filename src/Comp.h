@@ -1,6 +1,21 @@
 #pragma once
 #include <ostream>
 #include <type_traits>
+#include <cstdint>
+
+enum ColorPreset : uint32_t
+{
+    RED        = 0xFF0000,
+    GREEN      = 0x00FF00,
+    BLUE       = 0x0000FF,
+    WHITE      = 0xFFFFFF,
+    BLACK      = 0x000000,
+    YELLOW     = 0xFFFF00,
+    CYAN       = 0x00FFFF,
+    MAGENTA    = 0xFF00FF,
+    ORANGE     = 0xFFA500,
+    PURPLE     = 0x800080
+};
 
 template <typename T>
 struct Vec2
@@ -11,16 +26,16 @@ struct Vec2
     Vec2() = default;
     Vec2(T x_, T y_) : x(x_),y(y_){}
 
-    Vec2& operator+(const Vec2& v){
+    Vec2 operator+(const Vec2& v){
         return {v.x + x,v.y + y};
     }
 
-    Vec2& operator-(const Vec2& v){
+    Vec2 operator-(const Vec2& v){
         return {v.x - x,v.y - y};
     }
 
     template<typename S,typename = std::enable_if_t<std::is_arithmetic_v<S>>>
-    constexpr Vec2& operator*(S s) const noexcept{
+    constexpr Vec2 operator*(S s) const noexcept{
         return { x * s, y * s };
     }
 
@@ -33,7 +48,7 @@ struct Vec2
 };
 
 template<typename T, typename S,typename = std::enable_if_t<std::is_arithmetic_v<S>>>
-constexpr Vec2<T>& operator*(S s, const Vec2<T>& v) noexcept{
+constexpr Vec2<T> operator*(S s, const Vec2<T>& v) noexcept{
     return { v.x * s, v.y * s };
 }
 

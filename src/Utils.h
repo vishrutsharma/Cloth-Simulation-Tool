@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <random>
@@ -54,21 +53,23 @@ namespace Utils
         {
             return static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
         }
+    }
 
-        inline SDL_Color GetRandomColorRGB()
+    namespace Color
+    {
+         inline SDL_Color GetRandomColorRGB()
         {
-            
             SDL_Color color;
-            color.r = static_cast<Uint8>(Int(256));
-            color.g = static_cast<Uint8>(Int(256));
-            color.b = static_cast<Uint8>(Int(256));
+            color.r = static_cast<Uint8>(Random::Int(256));
+            color.g = static_cast<Uint8>(Random::Int(256));
+            color.b = static_cast<Uint8>(Random::Int(256));
             color.a = 255;
             return color;
         }
 
         inline SDL_Color GetRandomColorHSV(int saturationLevel = 1, int valueLevel = 1)
         {
-            float h = Float01() * 360.0f;
+            float h = Random::Float01() * 360.0f;
             float s =  saturationLevel;
             float v =  valueLevel;
             float c = v * s;               
@@ -88,6 +89,19 @@ namespace Utils
             color.r = (Uint8)((r1 + m) * 255);
             color.g = (Uint8)((g1 + m) * 255);
             color.b = (Uint8)((b1 + m) * 255);
+            color.a = 255;
+
+            return color;
+        }
+
+
+         SDL_Color HexToSDLColor(uint32_t hex)
+        {
+            SDL_Color color;
+
+            color.r = (hex >> 16) & 0xFF;
+            color.g = (hex >> 8)  & 0xFF;
+            color.b = (hex)       & 0xFF;
             color.a = 255;
 
             return color;

@@ -40,11 +40,11 @@ int main(int argc,char* argv[]) {
         return -1;
     }
 
-    Input input;
-    Cloth* cloth = BasicClothBuilder()
+    Input input{};
+    Cloth* cloth = BasicClothBuilder(input)
                     .SetRenderer(renderer)
                     .SetSize(400,500)
-                    .SetNodeSize(5)
+                    .SetNodeSize(10)
                     .SetGap(10)
                     .SetPosition(FVec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2})
                     .SetPhysicsAttribs(Vec2{0.0f,981.0f},0.01f,10.0f)

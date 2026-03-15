@@ -1,5 +1,6 @@
 #pragma once
 #include "Cloth.h"
+#include "Input.h"
 #include <SDL.h>
 #include <memory>
 
@@ -22,7 +23,8 @@ class BasicClothBuilder : public ClothBuilder
         Cloth* cloth;
 
     public:
-        BasicClothBuilder() : cloth(new Cloth()) {}
+        //TODO: THIS LOOKS UGLY ,OVERCOME THE INJECTION TO CLOTH
+        BasicClothBuilder(Input& input) : cloth(new Cloth(input)) {}
         ~BasicClothBuilder()
         {
             delete cloth;

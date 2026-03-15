@@ -2,11 +2,12 @@
 #include "Node.h"
 #include "Thread.h"
 #include <SDL.h>
+#include "Input.h"
 
 #include <vector>
 
 constexpr float NODE_SIZE = 1.0f; 
-constexpr float FORCE = 1.0f;
+constexpr float FORCE = 0.5f;
 
 class Cloth
 {
@@ -29,15 +30,15 @@ private:
     int m_nodeSize;
     int m_nodesGap;
     SDL_Rect m_clothRect;
+    Input m_input;
     
 private:
-    //void AddNode(Vec2&&);
     void KeepInRange(Node&);
     void AddThread(int,int);
     void AddConstraint();
 
 public:
-    Cloth();
+    Cloth(Input&);
     inline void SetRenderer(SDL_Renderer* renderer) {m_renderer = renderer;}
     inline void SetPosition(FVec2 pos) {m_position = pos;}
     inline void SetSize(int width,int height) { m_clothWidth = width; m_clothHeight = height;}

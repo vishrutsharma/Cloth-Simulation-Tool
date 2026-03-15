@@ -1,9 +1,11 @@
 #include "Cloth.h"
+#include "Comp.h"
 #include <cmath>
 #include <algorithm>
 #include "Utils.h"
 
-Cloth :: Cloth() {
+Cloth :: Cloth(Input& input) {
+    m_input = input;
     m_SimulationTimeTick = 0;
 }
 
@@ -29,15 +31,24 @@ void Cloth :: Build(){
             float yPos =  startY + y * stepSize;
             float xPos =  startX + x * stepSize;
             FVec2 pos {xPos,yPos};
-            SDL_Color color {Utils::Random::GetRandomColorHSV()};
-            Node node{pos,color,m_nodeSize,y == 0};
+            SDL_Color color {Utils::Color::HexToSDLColor(ColorPreset::WHITE)};
+            //SDL_Color color {Utils::Color::GetRandomColorHSV()} ;
+            Node node{pos,color,m_nodeSize,false};
             m_nodes.push_back(node);
         }
     } 
     
     int hrThreadsCount = (resX - 1) * resY;
     int vrThreadsCount = (resY - 1) * resX;
-    
+
+    auto AddThread = [&](int indexA,int indexB)
+    {
+        Node& nodeA = m_nodes[indexA];
+        Node& nodeB = m_nodes[indexB];
+        float distance = Utils::Math::GetDistance(nodeA.m_currentPos,nodeB.m_currentPos);
+        m_threads.emplace_back(indexA,indexB,distance);
+    };
+
     for(int i = 0 ; i < m_nodes.size(); i++)
     {
         int nodeHScan = i % resX;
@@ -80,7 +91,7 @@ void Cloth::Update(float dt)
     for (int i =0; i < m_nodes.size(); i++)
     {
         Node& node = m_nodes[i];
-        if(!node.m_isPinned)
+        if(!node.IsPinned())
         {
             const FVec2 prevPos = node.m_currentPos;
             node.m_currentPos.x = 2.0f * node.m_currentPos.x - node.m_prevPos.x + acceleration.x * dt * dt;
@@ -90,31 +101,13 @@ void Cloth::Update(float dt)
         node.Update(dt);
     }
 
-    for(int i = 0; i < 8; i++)
+    for(int i = 0; i < 10; i++)
     {
         AddConstraint();
 
         for(Node& node : m_nodes)
             KeepInRange(node);
     }  
-}
-
-void Cloth :: Render() 
-{
-    if(!m_renderer)
-        return;
-
-    SDL_SetRenderDrawColor(m_renderer,245,122,24,255);
-    SDL_RenderDrawRect(m_renderer,&m_clothRect);
-    
-    for(Node& n : m_nodes) {
-        n.Render(m_renderer);
-    }
-
-    for(Thread& t : m_threads)
-    {
-       t.Render(m_renderer,m_nodes[t.GetIndexA()].m_currentPos,m_nodes[t.GetIndexB()].m_currentPos);
-    }
 }
 
 void Cloth::AddConstraint()
@@ -144,8 +137,8 @@ void Cloth::AddConstraint()
             diff.y * difference
         };
 
-        bool aPinned = nodeA.m_isPinned;
-        bool bPinned = nodeB.m_isPinned;
+        bool aPinned = nodeA.IsPinned();
+        bool bPinned = nodeB.IsPinned();
 
         if(!aPinned && !bPinned)
         {
@@ -168,10 +161,20 @@ void Cloth::AddConstraint()
     }
 }
 
-void Cloth::AddThread(int nodeAIndex ,int nodeBIndex)
+void Cloth :: Render() 
 {
-    Node& nodeA = m_nodes[nodeAIndex];
-    Node& nodeB = m_nodes[nodeBIndex];
-    float distance = Utils::Math::GetDistance(nodeA.m_currentPos,nodeB.m_currentPos);
-    m_threads.emplace_back(nodeAIndex,nodeBIndex,distance);
+    if(!m_renderer)
+        return;
+
+    // SDL_SetRenderDrawColor(m_renderer,245,122,24,255);
+    // SDL_RenderDrawRect(m_renderer,&m_clothRect);
+    
+    for(Node& n : m_nodes) {
+        n.Render(m_renderer);
+    }
+
+    for(Thread& t : m_threads)
+    {
+       t.Render(m_renderer,m_nodes[t.GetIndexA()].m_currentPos,m_nodes[t.GetIndexB()].m_currentPos);
+    }
 }
