@@ -31,9 +31,11 @@ void Cloth :: Build(){
             float yPos =  startY + y * stepSize;
             float xPos =  startX + x * stepSize;
             FVec2 pos {xPos,yPos};
-            SDL_Color color {Utils::Color::HexToSDLColor(ColorPreset::WHITE)};
             //SDL_Color color {Utils::Color::GetRandomColorHSV()} ;
-            Node node{pos,color,m_nodeSize,false};
+            bool isPinned = y == 0 && x == 0 || y == 0 && x == resX -1;
+            isPinned  = false;
+            SDL_Color color { isPinned ? Utils::Color::HexToSDLColor(ColorPreset::RED) : Utils::Color::HexToSDLColor(ColorPreset::WHITE)};
+            Node node{pos,color,m_nodeSize,isPinned};
             m_nodes.push_back(node);
         }
     } 
@@ -87,15 +89,16 @@ void Cloth::Update(float dt)
     if (m_nodes.empty())
         return;
 
-    FVec2 acceleration{0.0f, FORCE};
+    FVec2 acceleration{0.0f, m_physicsParam.m_gravity.y};
     for (int i =0; i < m_nodes.size(); i++)
     {
         Node& node = m_nodes[i];
-        if(!node.IsPinned())
+         if (!node.IsPinned())
         {
-            const FVec2 prevPos = node.m_currentPos;
-            node.m_currentPos.x = 2.0f * node.m_currentPos.x - node.m_prevPos.x + acceleration.x * dt * dt;
-            node.m_currentPos.y = 2.0f * node.m_currentPos.y - node.m_prevPos.y + acceleration.y * dt * dt;
+            FVec2 velocity = node.m_currentPos - node.m_prevPos;
+            velocity *= (1.0f - m_physicsParam.m_drag);
+            FVec2 prevPos = node.m_currentPos;
+            node.m_currentPos = node.m_currentPos + velocity + acceleration * dt * dt;
             node.m_prevPos = prevPos;
         }
         node.Update(dt);
@@ -129,14 +132,11 @@ void Cloth::AddConstraint()
             continue;
 
         float restLength = thread.GetLength();
+        float stiffness = m_physicsParam.m_elasticity;
+        float difference = (length - restLength) / length;
+        difference *= stiffness;
 
-       float difference = (length - restLength) / length;
-    
-        FVec2 offset{
-            diff.x * difference,
-            diff.y * difference
-        };
-
+        FVec2 offset = diff * difference;
         bool aPinned = nodeA.IsPinned();
         bool bPinned = nodeB.IsPinned();
 
