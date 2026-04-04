@@ -30,6 +30,7 @@ public:
 
     inline void Select() { m_isSelected = true; }
     inline void Deselect() { m_isSelected = false; }
+    inline bool IsSelected() {return m_isSelected;}
 
     void Render(SDL_Renderer*);
     void Update(float dt);

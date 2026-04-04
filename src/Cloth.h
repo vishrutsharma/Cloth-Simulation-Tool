@@ -31,8 +31,8 @@ private:
     int m_nodesGap;
     SDL_Rect m_clothRect;
 
-    SDL_Color m_inRangeColor;
-    SDL_Color m_offRangeColor;
+    SDL_Color m_inRangeNodeColor;
+    SDL_Color m_defaultNodeColor;
     int m_detectionRadius;
     
 private:

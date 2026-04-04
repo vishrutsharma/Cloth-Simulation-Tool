@@ -8,8 +8,8 @@
 Cloth :: Cloth() {
   
     m_SimulationTimeTick = 0;
-    m_inRangeColor = Utils::Color::HexToSDLColor(ColorPreset::BLUE);
-    m_offRangeColor = Utils::Color::HexToSDLColor(ColorPreset::WHITE);
+    m_inRangeNodeColor = Utils::Color::HexToSDLColor(ColorPreset::BLUE);
+    m_defaultNodeColor = Utils::Color::HexToSDLColor(ColorPreset::WHITE);
     m_detectionRadius = 50;
 }
 
@@ -38,7 +38,7 @@ void Cloth :: Build(){
             //SDL_Color color {Utils::Color::GetRandomColorHSV()} ;
             bool isPinned = y == 0 && x == resX/2 ;//|| y == 0 && x == resX -1;
             //isPinned  = false;
-            SDL_Color color { isPinned ? Utils::Color::HexToSDLColor(ColorPreset::RED) : m_offRangeColor};
+            SDL_Color color { isPinned ? Utils::Color::HexToSDLColor(ColorPreset::RED) : m_defaultNodeColor};
             Node node{pos,color,m_nodeSize,isPinned};
             m_nodes.push_back(node);
         }
@@ -124,14 +124,33 @@ void Cloth::Update(float dt)
 void Cloth::ProcessInput(Input& input)
 {
     FVec2 mousePos = FVec2{(float)input.GetMousePos().x,(float)input.GetMousePos().y};
-    for(Node& n : m_nodes)
+    for(Node& node : m_nodes)
     {
-        if(n.IsPinned()) continue;
+        if(node.IsPinned()) continue;
 
-        int dist  = static_cast<int>(Utils::Math::GetSQUAREDDistance(mousePos,n.m_currentPos));
-        n.SetColor(dist<=m_detectionRadius*m_detectionRadius ? m_inRangeColor : m_offRangeColor);
+        int dist  = static_cast<int>(Utils::Math::GetSQUAREDDistance(mousePos,node.m_currentPos));
+        if(dist <= m_detectionRadius*m_detectionRadius)
+        {
+            node.Select();
+            node.SetColor(m_inRangeNodeColor);
+        }
+        else
+        {
+            node.Deselect();
+            node.SetColor(m_defaultNodeColor);
+        }
+
+        if(input.IsMouseButtonDown() || node.IsSelected())
+        {
+           FVec2 diff  =  input.GetMousePos() - input.GetMousePrevPos();
+           if(diff.x > m_physicsParam.m_elasticity) diff.x = m_physicsParam.m_elasticity;
+           if(diff.y > m_physicsParam.m_elasticity) diff.y = m_physicsParam.m_elasticity;
+           if(diff.x < -m_physicsParam.m_elasticity) diff.x = -m_physicsParam.m_elasticity;
+           if(diff.y < -m_physicsParam.m_elasticity) diff.y = -m_physicsParam.m_elasticity;
+           node.m_prevPos = node.m_currentPos -  diff;  
+        }
+    
     }
-
 }
 
 void Cloth::AddConstraint()

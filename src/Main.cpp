@@ -69,9 +69,9 @@ int main(int argc,char* argv[]) {
         
         while(accumulator > FIXED_DT)
         {
+            cloth->ProcessInput(input);
             cloth->Update(FIXED_DT);
             accumulator -= dt;
-            cloth->ProcessInput(input);
         }
         
         SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
