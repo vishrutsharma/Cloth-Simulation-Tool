@@ -4,7 +4,7 @@ Node::Node(FVec2& currentPos,SDL_Color& color,int size,bool isPinned) {
     m_currentPos = currentPos;
     m_prevPos = currentPos;
     m_size = size;
-    m_color = color;
+    SetColor(color);
     m_velocity = FVec2{0,0};
     m_rect.w = size;
     m_rect.h = size;

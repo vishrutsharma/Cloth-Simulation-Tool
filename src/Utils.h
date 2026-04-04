@@ -29,6 +29,15 @@ namespace Utils
             float dy = pos2.y - pos1.y;
             return sqrtf(dx*dx + dy*dy);     
         }
+
+        float GetSQUAREDDistance(const FVec2& pos1,const FVec2& pos2)
+        {
+            float dx = pos2.x - pos1.x;
+            float dy = pos2.y - pos1.y;
+
+            float distSQRD = dx*dx + dy*dy;
+            return distSQRD;
+        }
     }
 
     namespace Random

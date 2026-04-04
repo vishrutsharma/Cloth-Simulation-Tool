@@ -3,10 +3,14 @@
 #include <cmath>
 #include <algorithm>
 #include "Utils.h"
+#include <iostream>
 
-Cloth :: Cloth(Input& input) {
-    m_input = input;
+Cloth :: Cloth() {
+  
     m_SimulationTimeTick = 0;
+    m_inRangeColor = Utils::Color::HexToSDLColor(ColorPreset::BLUE);
+    m_offRangeColor = Utils::Color::HexToSDLColor(ColorPreset::WHITE);
+    m_detectionRadius = 50;
 }
 
 void Cloth :: Build(){
@@ -32,9 +36,9 @@ void Cloth :: Build(){
             float xPos =  startX + x * stepSize;
             FVec2 pos {xPos,yPos};
             //SDL_Color color {Utils::Color::GetRandomColorHSV()} ;
-            bool isPinned = y == 0 && x == 0 || y == 0 && x == resX -1;
-            isPinned  = false;
-            SDL_Color color { isPinned ? Utils::Color::HexToSDLColor(ColorPreset::RED) : Utils::Color::HexToSDLColor(ColorPreset::WHITE)};
+            bool isPinned = y == 0 && x == resX/2 ;//|| y == 0 && x == resX -1;
+            //isPinned  = false;
+            SDL_Color color { isPinned ? Utils::Color::HexToSDLColor(ColorPreset::RED) : m_offRangeColor};
             Node node{pos,color,m_nodeSize,isPinned};
             m_nodes.push_back(node);
         }
@@ -104,13 +108,30 @@ void Cloth::Update(float dt)
         node.Update(dt);
     }
 
-    for(int i = 0; i < 10; i++)
+    int simulationSteps = 10;
+    for(int i = 0; i < simulationSteps; i++)
     {
         AddConstraint();
 
         for(Node& node : m_nodes)
             KeepInRange(node);
-    }  
+    } 
+    
+}
+
+
+//TODO: Optimise this by creating quadtrees
+void Cloth::ProcessInput(Input& input)
+{
+    FVec2 mousePos = FVec2{(float)input.GetMousePos().x,(float)input.GetMousePos().y};
+    for(Node& n : m_nodes)
+    {
+        if(n.IsPinned()) continue;
+
+        int dist  = static_cast<int>(Utils::Math::GetSQUAREDDistance(mousePos,n.m_currentPos));
+        n.SetColor(dist<=m_detectionRadius*m_detectionRadius ? m_inRangeColor : m_offRangeColor);
+    }
+
 }
 
 void Cloth::AddConstraint()

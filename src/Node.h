@@ -19,6 +19,7 @@ public:
     Node(FVec2&, SDL_Color&, int size, bool);
 
     inline const SDL_Color& GetColor() const { return m_color; }
+    inline void SetColor(SDL_Color& color) {m_color = color;}
     inline const SDL_Rect& GetRect() const { return m_rect; }
     inline float GetMass() const { return m_mass; }
 

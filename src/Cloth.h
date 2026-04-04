@@ -30,7 +30,10 @@ private:
     int m_nodeSize;
     int m_nodesGap;
     SDL_Rect m_clothRect;
-    Input m_input;
+
+    SDL_Color m_inRangeColor;
+    SDL_Color m_offRangeColor;
+    int m_detectionRadius;
     
 private:
     void KeepInRange(Node&);
@@ -38,7 +41,7 @@ private:
     void AddConstraint();
 
 public:
-    Cloth(Input&);
+    Cloth();
     inline void SetRenderer(SDL_Renderer* renderer) {m_renderer = renderer;}
     inline void SetPosition(FVec2 pos) {m_position = pos;}
     inline void SetSize(int width,int height) { m_clothWidth = width; m_clothHeight = height;}
@@ -46,6 +49,7 @@ public:
     inline void SetGap(int gap) {m_nodesGap = gap;}
     inline void SetPhysicsAttribs(FVec2 gravity, float drag,float elasticity) { m_physicsParam ={gravity,drag,elasticity};}
     
+    void ProcessInput(Input&);
     void Build();
     void Update(float);
     void Render();

@@ -23,8 +23,7 @@ class BasicClothBuilder : public ClothBuilder
         Cloth* cloth;
 
     public:
-        //TODO: THIS LOOKS UGLY ,OVERCOME THE INJECTION TO CLOTH
-        BasicClothBuilder(Input& input) : cloth(new Cloth(input)) {}
+        BasicClothBuilder() : cloth(new Cloth()) {}
         ~BasicClothBuilder()
         {
             delete cloth;

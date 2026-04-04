@@ -41,13 +41,13 @@ int main(int argc,char* argv[]) {
     }
 
     Input input{};
-    Cloth* cloth = BasicClothBuilder(input)
+    Cloth* cloth = BasicClothBuilder()
                     .SetRenderer(renderer)
-                    .SetSize(200,400)
-                    .SetNodeSize(5)
+                    .SetSize(500,400)
+                    .SetNodeSize(10)
                     .SetGap(10)
                     .SetPosition(FVec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2})
-                    .SetPhysicsAttribs(Vec2{0.0f,981.0f},0.01f,0.9f)
+                    .SetPhysicsAttribs(Vec2{0.0f,981.0f},0.01f,0.01f)
                     .Build();
 
     SDL_Event e;
@@ -71,9 +71,9 @@ int main(int argc,char* argv[]) {
         {
             cloth->Update(FIXED_DT);
             accumulator -= dt;
+            cloth->ProcessInput(input);
         }
         
-      
         SDL_SetRenderDrawColor(renderer, 0, 0,0, 255);
         SDL_RenderClear(renderer);
         cloth->Render();
