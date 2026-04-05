@@ -43,11 +43,11 @@ int main(int argc,char* argv[]) {
     Input input{};
     Cloth* cloth = BasicClothBuilder()
                     .SetRenderer(renderer)
-                    .SetSize(500,400)
-                    .SetNodeSize(10)
-                    .SetGap(10)
+                    .SetSize(500,500)
+                    .SetNodeSize(5)
+                    .SetGap(5)
                     .SetPosition(FVec2{WINDOW_WIDTH/2,WINDOW_HEIGHT/2})
-                    .SetPhysicsAttribs(Vec2{0.0f,981.0f},0.01f,0.01f)
+                    .SetPhysicsAttribs(Vec2{0.0f,981.0f},0.1f,0.08f)
                     .Build();
 
     SDL_Event e;

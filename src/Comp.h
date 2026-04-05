@@ -30,9 +30,14 @@ struct Vec2
         return {v.x + x,v.y + y};
     }
 
-    Vec2 operator-(const Vec2& v) const{
-        return {x - v.x,y - v.y};
+    Vec2 operator-(const Vec2& u) const{
+        return {x - u.x,y - u.y};
     }
+
+    Vec2 operator+=(const Vec2& u) const{
+        return {x + u.x , y+ u.y};
+    }
+
 
     template<typename S,typename = std::enable_if_t<std::is_arithmetic_v<S>>>
     constexpr Vec2 operator*(S s) const noexcept{
@@ -45,7 +50,13 @@ struct Vec2
         y *= s;
         return *this;
     }
+
+    template <typename U>
+    explicit Vec2(const Vec2<U>& u) : x(static_cast<T>(u.x)), y(static_cast<T>(u.y))
+    {}
+
 };
+
 
 template<typename T, typename S,typename = std::enable_if_t<std::is_arithmetic_v<S>>>
 constexpr Vec2<T> operator*(S s, const Vec2<T>& v) noexcept{
@@ -62,3 +73,4 @@ std::ostream& operator<<(std::ostream& os, const Vec2<T>& v)
 
 using FVec2 = Vec2<float>;
 using IVec2 = Vec2<int>;
+

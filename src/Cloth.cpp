@@ -10,7 +10,7 @@ Cloth :: Cloth() {
     m_SimulationTimeTick = 0;
     m_inRangeNodeColor = Utils::Color::HexToSDLColor(ColorPreset::BLUE);
     m_defaultNodeColor = Utils::Color::HexToSDLColor(ColorPreset::WHITE);
-    m_detectionRadius = 50;
+    m_detectionRadius = 20;
 }
 
 void Cloth :: Build(){
@@ -36,8 +36,8 @@ void Cloth :: Build(){
             float xPos =  startX + x * stepSize;
             FVec2 pos {xPos,yPos};
             //SDL_Color color {Utils::Color::GetRandomColorHSV()} ;
-            bool isPinned = y == 0 && x == resX/2 ;//|| y == 0 && x == resX -1;
-            //isPinned  = false;
+            bool isPinned = y == 0 ;
+           //isPinned  = false;
             SDL_Color color { isPinned ? Utils::Color::HexToSDLColor(ColorPreset::RED) : m_defaultNodeColor};
             Node node{pos,color,m_nodeSize,isPinned};
             m_nodes.push_back(node);
@@ -108,7 +108,7 @@ void Cloth::Update(float dt)
         node.Update(dt);
     }
 
-    int simulationSteps = 10;
+    int simulationSteps = 5;
     for(int i = 0; i < simulationSteps; i++)
     {
         AddConstraint();
@@ -140,17 +140,16 @@ void Cloth::ProcessInput(Input& input)
             node.SetColor(m_defaultNodeColor);
         }
 
-        if(input.IsMouseButtonDown() || node.IsSelected())
+        if(input.IsMouseButtonDown() && node.IsSelected())
         {
-           FVec2 diff  =  input.GetMousePos() - input.GetMousePrevPos();
-           if(diff.x > m_physicsParam.m_elasticity) diff.x = m_physicsParam.m_elasticity;
-           if(diff.y > m_physicsParam.m_elasticity) diff.y = m_physicsParam.m_elasticity;
-           if(diff.x < -m_physicsParam.m_elasticity) diff.x = -m_physicsParam.m_elasticity;
-           if(diff.y < -m_physicsParam.m_elasticity) diff.y = -m_physicsParam.m_elasticity;
-           node.m_prevPos = node.m_currentPos -  diff;  
+            // Snap to mouse logic
+           FVec2 mousePos = FVec2(input.GetMousePos());
+           node.m_currentPos = mousePos;
+           node.m_prevPos = mousePos;
+           node.Update(0.0);
         }
-    
     }
+
 }
 
 void Cloth::AddConstraint()
