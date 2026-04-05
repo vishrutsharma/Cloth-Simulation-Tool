@@ -14,13 +14,42 @@ void Input::HandleEvent(const SDL_Event& event)
         break;
 
         case SDL_MOUSEBUTTONDOWN:
-        m_isMouseButtonDown = true;
-        SDL_GetMouseState(&m_mousePrevPos.x,&m_mousePrevPos.y); 
+        {
+            if (event.button.button == SDL_BUTTON_LEFT)
+                m_isMouseLeftButtonDown = true;
+
+            if (event.button.button == SDL_BUTTON_RIGHT)
+                m_isMouseRightButtonDown = true;
+
+            SDL_GetMouseState(&m_mousePrevPos.x, &m_mousePrevPos.y);
+        }
         break;
 
         case SDL_MOUSEBUTTONUP:
-        m_mousePrevPos = {0,0};
-        m_isMouseButtonDown = false;
+        {
+            if (event.button.button == SDL_BUTTON_LEFT)
+                m_isMouseLeftButtonDown = false;
+
+            if (event.button.button == SDL_BUTTON_RIGHT)
+                m_isMouseRightButtonDown = false;
+        }
         break;
     }
 }
+
+
+    // convert this to bitmask logic
+    bool Input::IsMouseButtonDown(MouseButtonType type)
+    {
+        switch (type)
+        {
+            case MouseButtonType::LEFT_BUTTON:
+                return m_isMouseLeftButtonDown;
+                break;
+
+            case MouseButtonType::RIGHT_BUTTON:
+                return m_isMouseRightButtonDown;
+                break;
+        }   
+        return false; 
+    }

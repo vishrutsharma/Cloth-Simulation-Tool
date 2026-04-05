@@ -124,6 +124,28 @@ void Cloth::Update(float dt)
 void Cloth::ProcessInput(Input& input)
 {
     FVec2 mousePos = FVec2{(float)input.GetMousePos().x,(float)input.GetMousePos().y};
+
+
+    for (int i = 0; i < m_threads.size(); )
+    {
+        Thread& thread = m_threads[i];
+
+        const Node& a = m_nodes[thread.GetIndexA()];
+        const Node& b = m_nodes[thread.GetIndexB()];
+
+        FVec2 mid = (a.m_currentPos + b.m_currentPos) * 0.5f;
+        int dist = Utils::Math::GetSQUAREDDistance(mousePos, mid);
+
+        if (input.IsMouseButtonDown(MouseButtonType::RIGHT_BUTTON) && dist <= m_detectionRadius*2.5f )
+        {
+            m_threads.erase(m_threads.begin() + i);
+        }
+        else
+        {
+            i++;
+        }
+    }       
+
     for(Node& node : m_nodes)
     {
         if(node.IsPinned()) continue;
@@ -140,10 +162,9 @@ void Cloth::ProcessInput(Input& input)
             node.SetColor(m_defaultNodeColor);
         }
 
-        if(input.IsMouseButtonDown() && node.IsSelected())
+        if(input.IsMouseButtonDown(MouseButtonType::LEFT_BUTTON) && node.IsSelected())
         {
             // Snap to mouse logic
-           FVec2 mousePos = FVec2(input.GetMousePos());
            node.m_currentPos = mousePos;
            node.m_prevPos = mousePos;
            node.Update(0.0);
@@ -178,6 +199,9 @@ void Cloth::AddConstraint()
         FVec2 offset = diff * difference;
         bool aPinned = nodeA.IsPinned();
         bool bPinned = nodeB.IsPinned();
+
+        float tearThreshold = 1.5f; // tweak this (1.2–2.0)
+
 
         if(!aPinned && !bPinned)
         {
