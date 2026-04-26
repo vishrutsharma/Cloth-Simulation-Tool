@@ -5,6 +5,8 @@ This project explores physics-based simulation of cloth using a network of nodes
 
 The goal of this project is to understand and implement **physics simulation techniques used in game engines**, especially **Verlet integration, constraint solving, and cloth systems**.
 
+<img src="media/video" width="400" height="600"/>
+
 ---
 
 ## Features
