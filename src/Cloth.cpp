@@ -35,7 +35,6 @@ void Cloth :: Build(){
             float yPos =  startY + y * stepSize;
             float xPos =  startX + x * stepSize;
             FVec2 pos {xPos,yPos};
-            //SDL_Color color {Utils::Color::GetRandomColorHSV()} ;
             bool isPinned = y == 0 ;
            //isPinned  = false;
             SDL_Color color { isPinned ? Utils::Color::HexToSDLColor(ColorPreset::RED) : m_defaultNodeColor};
